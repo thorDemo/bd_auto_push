@@ -79,6 +79,12 @@ class PushTool:
                               (domain, PushTool.random_time(),
                                PushTool.random_chars(randint(3, 6))))
 
+        if int(config.get('bd_push', 'type_six')) == 1:
+            """ http://abc.com/fangchan/20181010xxx.html """
+            target_url.append('%s/%s/%s%s.html' %
+                              (domain, PushTool.random_path(), PushTool.random_time(),
+                               PushTool.random_chars(randint(3, 6))))
+
         return choice(target_url)
 
     @staticmethod
