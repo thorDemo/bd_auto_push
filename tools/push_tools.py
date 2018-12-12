@@ -6,13 +6,54 @@ from urllib import request
 from http import cookiejar
 import re
 from configparser import ConfigParser
+from datetime import datetime
+import time
 
 
 class PushTool:
+    def __init__(self):
+        self.target_url = []
+        self.start = datetime.now()
+        config = ConfigParser()
+        config.read('config.ini', 'utf-8')
+        domain = config.get('bd_push', 'target')
+        one = int(config.get('bd_push', 'type_one'))
+        two = int(config.get('bd_push', 'type_two'))
+        three = int(config.get('bd_push', 'type_three'))
+        four = int(config.get('bd_push', 'type_four'))
+        five = int(config.get('bd_push', 'type_five'))
+        six = int(config.get('bd_push', 'type_six'))
+        while True:
+            if one == 1:
+                """ http://abc.com/lsjxxxx/ """
+                self.target_url.append('%s%s/' % (domain, PushTool.random_chars(randint(3, 5))))
+            if two == 1:
+                """ http://abc.com/lsjxxx/.html """
+                self.target_url.append('%s%s.html' % (domain, PushTool.random_chars(randint(3, 5))))
+            if three == 1:
+                """ http://abc.com/lsjxxx/20181010xxx.html """
+                self.target_url.append('%s%s/%s%s.html' %
+                                  (domain, PushTool.random_chars(randint(3, 5)),
+                                   PushTool.random_time(),
+                                   PushTool.random_chars(randint(3, 5))))
+            if four == 1:
+                """ http://abc.com/lsjxxx/xxxx/ """
+                self.target_url.append('%s%s/%s/' %
+                                  (domain, PushTool.random_chars(randint(3, 5)),
+                                   PushTool.random_chars(randint(5, 8))))
+            if five == 1:
+                """ http://abc.com/lsj20181010xxx.html """
+                self.target_url.append('%s%s%s.html' %
+                                  (domain, PushTool.random_time(),
+                                   PushTool.random_chars(randint(3, 6))))
+            if six == 1:
+                """ http://abc.com/fangchan/20181010xxx.html """
+                self.target_url.append('%s/%s/%s%s.html' %
+                                  (domain, PushTool.random_path(), PushTool.random_time(),
+                                   PushTool.random_chars(randint(3, 6))))
+            if len(self.target_url) > 500:
+                break
 
-    @staticmethod
-    def get_proxy():
-        return requests.get("http://127.0.0.1:5010/get/").content
 
     @staticmethod
     def random_chars(num):
@@ -49,43 +90,12 @@ class PushTool:
                PushTool.random_chars(randint(3, 5)))
         return url
 
-    @staticmethod
-    def rand_all(domain):
-        config = ConfigParser()
-        config.read('config.ini', 'utf-8')
-        target_url = []
-        if int(config.get('bd_push', 'type_one')) == 1:
-            """ http://abc.com/lsjxxxx/ """
-            target_url.append('%s%s/' % (domain, PushTool.random_chars(randint(3, 5))))
-        if int(config.get('bd_push', 'type_two')) == 1:
-            """ http://abc.com/lsjxxx/.html """
-            target_url.append('%s%s.html' % (domain, PushTool.random_chars(randint(3, 5))))
-
-        if int(config.get('bd_push', 'type_three')) == 1:
-            """ http://abc.com/lsjxxx/20181010xxx.html """
-            target_url.append('%s%s/%s%s.html' %
-                              (domain, PushTool.random_chars(randint(3, 5)),
-                               PushTool.random_time(),
-                               PushTool.random_chars(randint(3, 5))))
-        if int(config.get('bd_push', 'type_four')) == 1:
-            """ http://abc.com/lsjxxx/xxxx/ """
-            target_url.append('%s%s/%s/' %
-                              (domain, PushTool.random_chars(randint(3, 5)),
-                               PushTool.random_chars(randint(5, 8))))
-
-        if int(config.get('bd_push', 'type_five')) == 1:
-            """ http://abc.com/lsj20181010xxx.html """
-            target_url.append('%s%s%s.html' %
-                              (domain, PushTool.random_time(),
-                               PushTool.random_chars(randint(3, 6))))
-
-        if int(config.get('bd_push', 'type_six')) == 1:
-            """ http://abc.com/fangchan/20181010xxx.html """
-            target_url.append('%s/%s/%s%s.html' %
-                              (domain, PushTool.random_path(), PushTool.random_time(),
-                               PushTool.random_chars(randint(3, 6))))
-
-        return choice(target_url)
+    def rand_all(self):
+        this = datetime.now()
+        delay = int((this - self.start).seconds)
+        if delay % 3600 == 0:
+            self.__init__()
+        return choice(self.target_url)
 
     @staticmethod
     def get_cookies():
@@ -768,4 +778,9 @@ class PushTool:
         ]
         return choice(ua)
 
+
 # print(PushTool.get_cookies())
+# tool = PushTool()
+# while True:
+#     print(tool.rand_all())
+    # time.sleep(1)

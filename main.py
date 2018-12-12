@@ -5,7 +5,7 @@ from threadpool import ThreadPool, makeRequests
 config = ConfigParser()
 config.read('config.ini', 'utf-8')
 https = int(config.get('bd_push', 'https'))
-thread_num = 2
+thread_num = 3
 target = config.get('bd_push', 'target')
 if https == 1:
     from mylib.https_push import https_push

@@ -14,12 +14,13 @@ start_time = datetime.now()
 
 
 def http_push(domain):
+    tool = PushTool()
     while True:
         global success_num
         global failure_num
         global start_time
-        referer = PushTool.rand_all(domain)
-        r = PushTool.rand_all(domain)
+        referer = tool.rand_all()
+        r = tool.rand_all()
         headers = {
             'User-Agent': PushTool.user_agent(),
             'Referer': referer,
@@ -68,4 +69,3 @@ def http_push(domain):
         sys.stdout.write(
             '%s 成功%s 预计(day/万):%s 万 成功率:%.2f%% 状态码:%s\r' % (datetime.now(), success_num, speed_day, percent, code))
         sys.stdout.flush()
-        time.sleep(randint(1, 2))
